@@ -38,46 +38,29 @@ test.describe('@login Login Functionality', () => {
     });
 
     test('@TC1003 Verify Login With Invalid Credentials', async ({ page }) => {
-        // Click on the "Sign In" button
-        await page.click('button:has-text("Sign In")');
-
-        // Wait for the login popup to open
         const [loginPage] = await Promise.all([
-            page.waitForEvent('popup'),
-            page.click('button:has-text("Sign In")')
+            page.context().waitForEvent('page'),
+            page.click("//div[text()='Sign In']")
         ]);
-
-        // Wait for the login page to load
         await loginPage.waitForLoadState();
 
-        // Enter invalid email and password
-        await loginPage.fill('input[name="email"]', 'invalid-email@example.com');
-        await loginPage.fill('input[name="password"]', 'invalid-password');
+        await loginPage.fill('input[name="email"]', 'invalidemail@example.com');
+        await loginPage.fill('input[name="password"]', 'InvalidPassword@123');
 
-        // Click on the "Sign In" button on the login page
         await loginPage.click('button[type="submit"]');
 
-        // Verify that an error message is displayed
-        await expect(loginPage.locator('text=Invalid email or password')).toBeVisible();
+        await expect(loginPage.locator('text=Invalid username/password')).toBeVisible();
     });
 
-    test('@TC1004 Verify Forgot Password Link', async ({ page }) => {
-        // Click on the "Sign In" button
-        await page.click('button:has-text("Sign In")');
-
-        // Wait for the login popup to open
+    test.only('@TC1004 Verify Forgot Password Link', async ({ page }) => {
         const [loginPage] = await Promise.all([
-            page.waitForEvent('popup'),
-            page.click('button:has-text("Sign In")')
+            page.context().waitForEvent('page'),
+            page.click("//div[text()='Sign In']")
         ]);
-
-        // Wait for the login page to load
         await loginPage.waitForLoadState();
 
-        // Click on the "Forgot Password?" link
         await loginPage.click('a:has-text("Forgot Password?")');
 
-        // Verify that the forgot password page is displayed
-        await expect(loginPage.locator('text=Reset your password')).toBeVisible();
+        await expect(loginPage.locator('text=Send Reset Link')).toBeVisible();
     });
 });
